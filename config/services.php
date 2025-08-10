@@ -35,4 +35,8 @@ return [
         ],
     ],
 
+    'deepl' => [
+        'api_url' => env('DEEPL_API_URL'),
+        'api_key' => env('DEEPL_API_KEY'),
+    ]
 ];
