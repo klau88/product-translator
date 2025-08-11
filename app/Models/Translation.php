@@ -5,11 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Product extends Model
+class Translation extends Model
 {
-    /** @use HasFactory<\Database\Factories\ProductFactory> */
+    /** @use HasFactory<\Database\Factories\TranslationFactory> */
     use HasFactory;
 
+
     protected $hidden = ['created_at', 'updated_at'];
-    protected $fillable = ['name', 'sku', 'description'];
+    protected $fillable = ['product_id', 'language', 'name', 'description'];
 }
