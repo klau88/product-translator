@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Language;
 use App\Models\Product;
 use App\Models\Translation;
 use Exception;
@@ -11,18 +12,19 @@ class ProductTranslationService
 
     /**
      * @param Product $product
-     * @param string $language
+     * @param Language $language
      * @return array
      * @throws Exception
      */
-    public function translate(Product $product, string $language): array
+    public function translate(Product $product, int $languageId): array
     {
         try {
             $locale = strtoupper(config('app.locale'));
+            $language = Language::find($languageId);
 
             $translationService = app(TranslationService::class);
-            $translateName = $translationService->translate($product->name, $language);
-            $translateDescription = $translationService->translate($product->description, $language);
+            $translateName = $translationService->translate($product->name, $language->code);
+            $translateDescription = $translationService->translate($product->description, $language->code);
 
             $response = [];
 
@@ -37,7 +39,7 @@ class ProductTranslationService
 
             $translation = Translation::updateOrCreate([
                 'product_id' => $product->id,
-                'language' => $language,
+                'language_id' => $languageId,
                 'name' => $response['name'],
                 'description' => $response['description'],
             ]);

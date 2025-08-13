@@ -36,7 +36,8 @@ class Create extends Component
         return view('livewire.products.create', [
             'inputStyle' => $this->inputStyle,
             'errorStyle' => $errorStyle,
-            'buttonStyle' => $this->buttonStyle
+            'buttonStyle' => $this->buttonStyle,
+            'h2Style' => $this->h2Style
         ]);
     }
 }

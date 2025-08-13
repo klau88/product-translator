@@ -4,6 +4,7 @@ namespace App\Livewire\Products;
 
 use App\Enums\Language;
 use App\Livewire\Forms\ProductForm;
+use App\Livewire\Traits\Messages;
 use App\Livewire\Traits\Styles;
 use App\Models\Product;
 use App\Models\Translation;
@@ -17,6 +18,7 @@ use Livewire\Features\SupportRedirects\Redirector;
 class Edit extends Component
 {
     use Styles;
+    use Messages;
 
     public Product $product;
     public ProductForm $form;
@@ -38,9 +40,19 @@ class Edit extends Component
      */
     public function mount(): void
     {
-        $this->form->setProduct($this->product);
+        $product = Product::with('translations.language')->find($this->product->id);
+
+        $this->form->setProduct($product);
         $this->languages = collect(Language::cases())->filter(fn($language) => $language->value !== strtoupper(config('app.locale')))->values()->toArray();
-        $this->translations = Translation::where('product_id', $this->product->id)->get();
+    }
+
+    /**
+     * @param Translation $translation
+     * @return void
+     */
+    public function deleteTranslation(Translation $translation): void
+    {
+        $translation->delete();
     }
 
     /**
@@ -49,11 +61,14 @@ class Edit extends Component
     public function render(): View
     {
         $errorStyle = 'mt-1 text-sm text-red-600';
+        $locale = config('app.locale');
 
         return view('livewire.products.edit', [
             'inputStyle' => $this->inputStyle,
             'errorStyle' => $errorStyle,
-            'buttonStyle' => $this->buttonStyle
+            'buttonStyle' => $this->buttonStyle,
+            'h2Style' => $this->h2Style,
+            'confirmDelete' => $this->language[$locale]['form']['delete']['confirm']
         ]);
     }
 }

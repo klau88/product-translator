@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Language;
 use App\Models\Product;
 use App\Services\ProductTranslationService;
 use App\Services\TranslationService;
@@ -64,30 +65,32 @@ class TranslationTest extends TestCase
     public function it_can_translate_a_product_to_english_and_save_it(): void
     {
         $locale = strtoupper(config('app.locale'));
-        $languageCode = 'EN';
-        $language = 'English';
+        $language = Language::where(['code' => 'EN'])->first();
+
         $product = Product::factory()->create([
             'name' => 'Blauwe pen',
             'description' => 'Een blauwe pen om je handtekening mee te zetten',
         ]);
 
-        $this->mock(TranslationService::class, function ($mock) use ($product, $locale, $languageCode) {
+        $this->mock(TranslationService::class, function ($mock) use ($product, $locale, $language) {
+            $language = Language::find($language->id);
+
             $mock->shouldReceive('translate')
-                ->with($product->name, $languageCode)
+                ->with($product->name, $language->code)
                 ->andReturn([
                     'detected_source_language' => $locale,
                     'text' => 'Blue pen'
                 ]);
 
             $mock->shouldReceive('translate')
-                ->with($product->description, $languageCode)
+                ->with($product->description, $language->code)
                 ->andReturn([
                     'detected_source_language' => $locale,
                     'text' => 'A blue pen to write your signature with'
                 ]);
         });
 
-        $response = $this->app->make(ProductTranslationService::class)->translate($product, $languageCode, $language);
+        $response = $this->app->make(ProductTranslationService::class)->translate($product, $language->id);
 
         $this->assertEquals($response['detected_source_language'], $locale);
         $this->assertEquals($response['product_id'], $product->id);

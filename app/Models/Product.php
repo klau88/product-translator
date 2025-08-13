@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Product extends Model
 {
@@ -12,4 +13,12 @@ class Product extends Model
 
     protected $hidden = ['created_at', 'updated_at'];
     protected $fillable = ['name', 'sku', 'description'];
+
+    /**
+     * @return HasMany
+     */
+    public function translations(): HasMany
+    {
+        return $this->hasMany(Translation::class, 'product_id', 'id');
+    }
 }

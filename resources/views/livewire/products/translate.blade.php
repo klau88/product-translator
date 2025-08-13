@@ -1,6 +1,28 @@
-<div class="flex justify-center mt-4">
-    <form class="w-full max-w-7xl bg-white shadow-md rounded-lg p-4 sm:p-6" wire:submit="submit()">
-        <h2 class="{{ $h2Style }}">Nieuw artikel</h2>
+<div class="max-w-7xl mt-4">
+    <form wire:submit="submit()">
+        <h2 class="{{ $h2Style }}">Vertaling toevoegen</h2>
+        <div class="mb-4">
+            <label for="language" class="block text-sm font-medium text-gray-700">
+                Taal
+            </label>
+            <select
+                wire:model="form.languageId"
+                wire:change="onChange"
+                class="{{ $inputStyle }}"
+                required
+            >
+                <option selected value="">Selecteer taal</option>
+                @foreach($languages as $language)
+                    <option value="{{ $language->id }}">{{ $language->name }}</option>
+                @endforeach
+            </select>
+
+            @error('form.languageId')
+            <div class="mt-1 text-sm text-red-600">
+                {{ $message }}
+            </div>
+            @enderror
+        </div>
         <div class="mb-4">
             <label for="name" class="block text-sm font-medium text-gray-700">
                 Naam artikel
@@ -20,46 +42,23 @@
             @enderror
         </div>
         <div class="mb-4">
-            <label for="name" class="block text-sm font-medium text-gray-700">
-                SKU
-            </label>
-            <input
-                type="text"
-                id="name"
-                wire:model.defer="form.sku"
-                class="{{ $inputStyle }}"
-                placeholder="SKU"
-            >
-            @error('sku')
-            <div class="mt-1 text-sm text-red-600">
-                {{ $message }}
-            </div>
-            @enderror
-        </div>
-        <div class="mb-4">
             <label for="description" class="block text-sm font-medium text-gray-700">
                 Omschrijving
             </label>
-
             <textarea
                 id="description"
                 wire:model.defer="form.description"
                 rows="4"
                 class="{{ $inputStyle }}"
-                placeholder="Omschrijving artikel"
+                placeholder="Omschrijving"
                 required
             ></textarea>
-
             @error('form.description')
             <div class="mt-1 text-sm text-red-600">
                 {{ $message }}
             </div>
             @enderror
         </div>
-        <div>
-            <button type="submit" class="{{ $buttonStyle }}">Opslaan</button>
-        </div>
+        <button class="{{ $buttonStyle }}" type="submit">Opslaan</button>
     </form>
 </div>
-
-

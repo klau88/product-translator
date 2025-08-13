@@ -36,14 +36,15 @@ class Index extends Component
      */
     public function render(): View
     {
-        $products = Product::paginate(50);
+        $products = Product::with('translations.language')->paginate(50);
         $locale = config('app.locale');
 
         return view('livewire.products.index', [
             'products' => $products,
             'buttonStyle' => $this->buttonStyle,
             'deleteButtonStyle' => $this->deleteButtonStyle,
-            'confirmDelete' => $this->language[$locale]['form']['delete']['confirm']
+            'confirmDelete' => $this->language[$locale]['form']['delete']['confirm'],
+            'h2Style' => $this->h2Style
         ]);
     }
 }

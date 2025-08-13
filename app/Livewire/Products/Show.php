@@ -32,6 +32,7 @@ class Show extends Component
     public function delete(Product $product): Redirector|null
     {
         $this->form->destroy($product);
+
         return $this->redirectRoute('products.index', navigate: true);
     }
 
@@ -41,7 +42,15 @@ class Show extends Component
     public function mount(): void
     {
         $this->languages = collect(Language::cases())->filter(fn($language) => $language->value !== strtoupper(config('app.locale')))->values()->toArray();
-        $this->translations = Translation::where('product_id', $this->product->id)->get();
+    }
+
+    /**
+     * @param Translation $translation
+     * @return void
+     */
+    public function deleteTranslation(Translation $translation): void
+    {
+        $translation->delete();
     }
 
     /**
@@ -50,10 +59,13 @@ class Show extends Component
     public function render(): View
     {
         $locale = config('app.locale');
+        $product = Product::with('translations.language')->find($this->product->id);
 
         return view('livewire.products.show', [
             'buttonStyle' => $this->buttonStyle,
-            'confirmDelete' => $this->language[$locale]['form']['delete']['confirm']
+            'confirmDelete' => $this->language[$locale]['form']['delete']['confirm'],
+            'h2Style' => $this->h2Style,
+            'product' => $product,
         ]);
     }
 }
