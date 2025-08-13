@@ -63,6 +63,17 @@ class Translate extends Component
     }
 
     /**
+     * @return void
+     */
+    public function translate(string $language): void
+    {
+        $languageId = Language::where('code', $language)->firstOrFail()->id;
+        $productTranslate = app(ProductTranslationService::class)->translate($this->product, $languageId);
+        $translation = Translation::find($productTranslate['id']);
+        $this->form->setTranslation($translation);
+    }
+
+    /**
      * @return View
      */
     public function render(): View

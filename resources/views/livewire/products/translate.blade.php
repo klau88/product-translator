@@ -1,6 +1,9 @@
 <div class="max-w-7xl mt-4">
     <form wire:submit="submit()">
-        <h2 class="{{ $h2Style }}">Vertaling toevoegen</h2>
+        <div class="flex justify-between items-center">
+            <h2 class="{{ $h2Style }}">Vertaling toevoegen</h2>
+            <button class="{{ $buttonStyle }}" wire:click="translate('EN')">Vertaal naar Engels</button>
+        </div>
         <div class="mb-4">
             <label for="language" class="block text-sm font-medium text-gray-700">
                 Taal
