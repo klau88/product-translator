@@ -16,7 +16,7 @@
         </thead>
         <tbody>
         @foreach($products as $product)
-            <tr" wire:key="{{ $product->id }}">
+            <tr wire:key="{{ $product->id }}">
                 <td class="py-2">{{ $product->name }}</td>
                 <td class="py-2">{{ str($product->description)->words(20) }}</td>
                 <td class="py-2">
